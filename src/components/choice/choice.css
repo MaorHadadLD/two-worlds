@@ -1,0 +1,410 @@
+/* ================= The close: which side is your idea on? ================= */
+
+.choose {
+  padding-top: clamp(72px, 8vw, 128px);
+  padding-bottom: clamp(48px, 6vw, 96px);
+}
+.choose-head {
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+.choose-head .chapter-title {
+  max-width: 14ch;
+  font-size: var(--step-display);
+}
+
+.choice {
+  position: relative;
+  margin-inline: 12px;
+  min-height: clamp(440px, 62svh, 620px);
+  border-radius: var(--radius);
+  overflow: clip;
+  isolation: isolate;
+  background: var(--paper);
+}
+
+/* Two worlds meeting at a seam; the chosen one sweeps across the other. */
+.side {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: clip-path 900ms var(--ease-in-out);
+}
+.side--idea {
+  background: var(--paper);
+  color: var(--graphite);
+  clip-path: inset(0 0 0 50%);
+}
+.side--product {
+  background: var(--ink);
+  color: var(--chalk);
+  clip-path: inset(0 50% 0 0);
+}
+.side[data-open] {
+  z-index: 2;
+  clip-path: inset(0 0 0 0);
+}
+
+.side-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  padding: clamp(32px, 4.5vw, 72px);
+  text-align: start;
+  cursor: pointer;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.side--idea .side-btn {
+  right: 0;
+}
+.side--product .side-btn {
+  left: 0;
+}
+.side-btn:focus-visible {
+  outline-offset: -12px;
+  border-radius: var(--radius);
+}
+.side-label {
+  position: relative;
+  font-size: clamp(1.75rem, 1.1rem + 2.4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.side--idea .side-label {
+  font-family: var(--font-sketch);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--pencil);
+  font-size: clamp(2.1rem, 1.3rem + 2.8vw, 3.8rem);
+}
+.side-sub {
+  max-width: 32ch;
+  font-size: var(--step-body);
+}
+.side--product .side-sub {
+  color: var(--chalk-soft);
+}
+.side-ring {
+  position: absolute;
+  inset: -18px -26px;
+  width: calc(100% + 52px);
+  height: calc(100% + 36px);
+  overflow: visible;
+  pointer-events: none;
+}
+.side-ring path {
+  fill: none;
+  stroke: var(--pencil);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 220ms ease;
+}
+.side--product .side-ring path {
+  stroke: var(--live);
+}
+.side-btn:focus-visible .side-ring path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 520ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .side-btn:hover .side-ring path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 520ms var(--ease-out);
+  }
+}
+.side-btn:active .side-label {
+  transform: scale(0.98);
+}
+
+/* Opened: the chosen side's answer becomes the heading of its brief. */
+.side[data-open] .side-btn {
+  right: 0;
+  left: 0;
+  width: auto;
+  bottom: auto;
+  justify-content: flex-start;
+  cursor: default;
+  padding-bottom: 0;
+}
+.side[data-open] .side-ring {
+  display: none;
+}
+.side[data-open] .side-sub {
+  opacity: 0;
+}
+
+/* The pencil circle travelling into the field frame. */
+.choice-morph {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  opacity: 0;
+}
+.choice-morph[data-on] {
+  opacity: 1;
+}
+.choice-morph path {
+  fill: none;
+  stroke: var(--pencil);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.choice-morph[data-side="product"] path {
+  stroke: var(--live);
+}
+
+/* ---------- The brief ---------- */
+
+.brief {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 40px clamp(32px, 5vw, 80px);
+  padding: clamp(150px, 15vw, 190px) clamp(32px, 4.5vw, 72px) clamp(40px, 4.5vw, 72px);
+}
+.brief[hidden] {
+  display: none;
+}
+.brief[data-side="product"] {
+  color: var(--chalk);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .brief:not([hidden]) {
+    animation: brief-in 520ms var(--ease-out) 380ms both;
+  }
+}
+@keyframes brief-in {
+  from {
+    opacity: 0;
+  }
+}
+.brief-fields {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+.field-label {
+  font-weight: 600;
+  font-size: var(--step-lead);
+  letter-spacing: -0.015em;
+}
+.field-label--sm {
+  margin-top: 18px;
+  font-size: 1.0625rem;
+}
+.field-label span {
+  font-weight: 400;
+  color: var(--graphite-soft);
+}
+.brief[data-side="product"] .field-label span {
+  color: var(--chalk-soft);
+}
+.field-hint {
+  margin: 0 0 8px;
+  max-width: 52ch;
+}
+.field {
+  width: 100%;
+  padding: 16px 18px;
+  border: 0;
+  border-radius: 14px;
+  background: #f7f6f2;
+  color: var(--graphite);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: 2px solid var(--pencil);
+  outline-offset: -2px;
+  transition:
+    outline-color var(--d-ui) ease,
+    outline-width var(--d-ui) ease,
+    outline-offset var(--d-ui) ease;
+}
+.field::placeholder {
+  color: #6b6d74;
+}
+.field:focus {
+  outline-width: 3px;
+  outline-offset: -3px;
+}
+.brief[data-side="product"] .field {
+  background: var(--surface-2);
+  color: var(--chalk);
+  outline-color: var(--surface-3);
+}
+.brief[data-side="product"] .field::placeholder {
+  color: var(--chalk-soft);
+}
+.brief[data-side="product"] .field:focus {
+  outline-color: var(--live);
+}
+.field--line {
+  min-height: 56px;
+}
+.field[aria-invalid="true"] {
+  outline: 3px solid #b8432a;
+  outline-offset: -3px;
+}
+.field-error {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #a33a22;
+  font-weight: 500;
+}
+.brief[data-side="product"] .field-error {
+  color: var(--alert);
+}
+.brief-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 22px;
+}
+.copy-btn {
+  display: grid;
+  min-height: 56px;
+  font-size: 1.0625rem;
+}
+.copy-btn > span {
+  grid-area: 1 / 1;
+  transition:
+    opacity 200ms ease,
+    transform 260ms var(--ease-out),
+    filter 200ms ease;
+}
+.copy-b {
+  opacity: 0;
+  transform: translateY(40%);
+  filter: blur(2px);
+}
+.copy-btn[data-done] .copy-a {
+  opacity: 0;
+  transform: translateY(-40%);
+  filter: blur(2px);
+}
+.copy-btn[data-done] .copy-b {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+.text-btn {
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+.brief-note {
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+  max-width: 56ch;
+}
+.brief[data-side="product"] .brief-note {
+  color: var(--chalk-soft);
+}
+.brief-note a {
+  font-weight: 500;
+}
+.manual {
+  margin-top: 8px;
+}
+
+.brief-preview {
+  margin: 0;
+  align-self: start;
+  padding: 24px 26px;
+  border-radius: 14px;
+  background: var(--paper-2);
+}
+.brief[data-side="product"] .brief-preview {
+  background: var(--surface);
+}
+.brief-preview figcaption {
+  margin-bottom: 12px;
+  font-size: var(--step-small);
+  color: var(--graphite-soft);
+}
+.brief[data-side="product"] .brief-preview figcaption {
+  color: var(--chalk-soft);
+}
+.brief-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side {
+    transition: clip-path 1ms linear;
+  }
+  .side[data-open] {
+    animation: side-fade 200ms ease both;
+  }
+  .brief:not([hidden]) {
+    animation: brief-in 200ms ease both;
+  }
+}
+@keyframes side-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Phone: the seam runs across, idea above, product below ---------- */
+
+@media (max-width: 760px) {
+  .choice {
+    margin-inline: 8px;
+    min-height: 600px;
+  }
+  .side--idea {
+    clip-path: inset(0 0 50% 0);
+  }
+  .side--product {
+    clip-path: inset(50% 0 0 0);
+  }
+  .side-btn {
+    width: auto;
+    left: 0;
+    right: 0;
+    padding: 28px 24px;
+    gap: 12px;
+  }
+  .side--idea .side-btn {
+    top: 0;
+    bottom: 50%;
+  }
+  .side--product .side-btn {
+    top: 50%;
+    bottom: 0;
+  }
+  .side[data-open] .side-btn {
+    top: 0;
+    bottom: auto;
+  }
+  .brief {
+    grid-template-columns: 1fr;
+    padding: 150px 20px 32px;
+  }
+  .choose-head .chapter-title {
+    font-size: clamp(2.1rem, 9vw, 2.75rem);
+  }
+}

@@ -1,0 +1,142 @@
+/* ================= What I build: a quiet ledger ================= */
+
+.build {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 48px clamp(32px, 6vw, 120px);
+  align-items: start;
+  padding-block: clamp(96px, 11vw, 180px) clamp(72px, 8vw, 140px);
+}
+.build-head {
+  display: grid;
+  gap: 22px;
+  position: sticky;
+  top: 32px;
+}
+
+.ledger {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+.ledger-row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "art name tech"
+    "art text text";
+  align-items: center;
+  gap: 6px 28px;
+  padding: 22px 22px 22px 26px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  background: transparent;
+  transition:
+    background-color var(--d-ui) ease,
+    transform var(--d-press) var(--ease-out);
+}
+.ledger-row:active {
+  transform: scale(0.99);
+}
+.ledger-art {
+  grid-area: art;
+}
+.ledger-name {
+  grid-area: name;
+  font-size: var(--step-lead);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.ledger-text {
+  grid-area: text;
+  max-width: 46ch;
+  color: var(--graphite);
+}
+.ledger-tech {
+  grid-area: tech;
+  justify-self: end;
+  font-size: var(--step-small);
+  color: var(--graphite-soft);
+  white-space: nowrap;
+}
+
+.mini-art {
+  width: 132px;
+  height: auto;
+  overflow: visible;
+}
+.mini-art .line {
+  fill: none;
+  stroke: var(--pencil);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transition: stroke 300ms ease;
+}
+.mini-art .fill {
+  fill: var(--surface);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.mini-art .fill-live {
+  fill: var(--live);
+  opacity: 0;
+  transition: opacity 300ms ease 60ms;
+}
+
+/* The row inks: pencil → ink, empty → filled. */
+.ledger-row:focus-visible,
+.ledger-row:active {
+  background: var(--paper);
+}
+.ledger-row:focus-visible .line,
+.ledger-row:active .line {
+  stroke: var(--surface-3);
+}
+.ledger-row:focus-visible .fill,
+.ledger-row:focus-visible .fill-live,
+.ledger-row:active .fill,
+.ledger-row:active .fill-live {
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ledger-row:hover {
+    background: var(--paper);
+  }
+  .ledger-row:hover .line {
+    stroke: var(--surface-3);
+  }
+  .ledger-row:hover .fill,
+  .ledger-row:hover .fill-live {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .build {
+    grid-template-columns: 1fr;
+  }
+  .build-head {
+    position: static;
+  }
+}
+@media (max-width: 560px) {
+  .ledger-row {
+    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-areas:
+      "art name"
+      "art text"
+      "art tech";
+    gap: 6px 16px;
+    padding: 18px 12px;
+    align-items: start;
+  }
+  .ledger-tech {
+    justify-self: start;
+  }
+  .mini-art {
+    width: 88px;
+  }
+}

@@ -1,0 +1,595 @@
+/* ================= Chapter: from idea to store ================= */
+
+.store-intro {
+  display: grid;
+  gap: 20px;
+  max-width: 44rem;
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+
+.store-panel {
+  position: relative;
+  margin-inline: 12px;
+  min-height: 88svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--chalk);
+  overflow: clip;
+}
+
+/* An ink part: the pencil version and the product version share one cell. */
+.ink-part {
+  display: grid;
+}
+.ink-part > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.ip-sk {
+  display: none;
+  pointer-events: none;
+  color: var(--pencil);
+}
+
+.store-col {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: clamp(28px, 4.5vw, 72px);
+}
+
+/* Tabs: plain text, the chosen one in full chalk on a step of tone. */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tab {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 1.0625rem;
+  color: var(--chalk-soft);
+  transition:
+    background-color var(--d-ui) ease,
+    color var(--d-ui) ease,
+    transform var(--d-press) var(--ease-out);
+}
+.tab:active {
+  transform: scale(0.96);
+}
+.tab[aria-pressed="true"] {
+  background: var(--surface-2);
+  color: var(--chalk);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tab[aria-pressed="false"]:hover {
+    color: var(--chalk);
+  }
+}
+
+.product-title {
+  margin: 12px 0 0;
+  font-size: clamp(1.9rem, 1.3rem + 2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.product-meta {
+  margin: 0;
+  color: var(--chalk-soft);
+  max-width: 34ch;
+}
+.product-price {
+  margin: 0;
+  font-size: clamp(2.2rem, 1.6rem + 2vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.act-add {
+  min-height: 64px;
+  font-size: 1.0625rem;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-weight: 500;
+}
+.stepper button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--chalk);
+  transition:
+    background-color var(--d-ui) ease,
+    transform var(--d-press) var(--ease-out);
+}
+.stepper button:active {
+  transform: scale(0.92);
+}
+.stepper button:disabled {
+  color: var(--surface-3);
+  cursor: not-allowed;
+}
+@media (hover: hover) and (pointer: fine) {
+  .stepper button:not(:disabled):hover {
+    background: var(--surface-3);
+  }
+}
+.stepper svg,
+.cart-remove svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+/* Cart */
+.cart {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  border-radius: var(--radius-ui);
+  background: var(--surface);
+}
+.cart-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.cart-head h4 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.cart-count {
+  color: var(--chalk-soft);
+  font-size: var(--step-small);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cart-count {
+    animation: count-bump 360ms var(--ease-out);
+  }
+}
+@keyframes count-bump {
+  from {
+    transform: translateY(-30%);
+    opacity: 0.2;
+  }
+}
+.cart-empty {
+  margin: 0;
+  color: var(--chalk-soft);
+}
+.cart-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+.cart-line {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows var(--d-ui) var(--ease-out),
+    opacity 180ms ease;
+}
+.cart-line[data-leaving] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+@starting-style {
+  .cart-line {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+.cart-line-in {
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto auto 40px;
+  align-items: center;
+  gap: 12px;
+  padding-block: 8px;
+}
+.cart-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.cart-thumb img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+.cart-name {
+  display: grid;
+  line-height: 1.25;
+  font-size: 0.95rem;
+}
+.cart-name span {
+  color: var(--chalk-soft);
+  font-size: var(--step-small);
+}
+.stepper--sm {
+  min-height: 40px;
+  padding: 0 2px;
+  gap: 2px;
+}
+.stepper--sm button {
+  width: 36px;
+  height: 36px;
+}
+.stepper--sm span {
+  min-width: 1.4em;
+  text-align: center;
+}
+.cart-sum {
+  min-width: 4.5em;
+  text-align: left;
+}
+.cart-remove {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--chalk-soft);
+  transition:
+    background-color var(--d-ui) ease,
+    color var(--d-ui) ease,
+    transform var(--d-press) var(--ease-out);
+}
+.cart-remove:active {
+  transform: scale(0.92);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cart-remove:hover {
+    background: var(--surface-2);
+    color: var(--chalk);
+  }
+}
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+.cart-go {
+  min-height: 52px;
+}
+.cart-note {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: var(--step-small);
+  color: var(--live);
+}
+
+/* Plate: the product on a flat field taken from its own pack. */
+.ip-plate {
+  padding: 40px;
+  align-content: center;
+}
+.plate {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: calc(var(--radius) - 6px);
+  background: var(--plate);
+  transition: background-color 420ms ease;
+}
+.plate-img {
+  position: absolute;
+  inset: 13% 19%;
+  width: 62%;
+  height: 74%;
+  object-fit: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .plate-img {
+    transition:
+      opacity 360ms ease,
+      transform 520ms var(--ease-out);
+  }
+  @starting-style {
+    .plate-img {
+      opacity: 0;
+      transform: translateY(14px) scale(0.97);
+    }
+  }
+}
+.plate figcaption {
+  position: absolute;
+  inset-inline-start: 18px;
+  bottom: 14px;
+  font-size: var(--step-small);
+  color: #34373d;
+}
+
+/* ---------- Sketch renderings ---------- */
+
+.ss-tabs {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  height: 44px;
+}
+.ss-tabs .pencil {
+  width: 70px;
+  height: 14px;
+}
+.ss-title {
+  font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.8rem);
+  line-height: 1;
+  padding-top: 12px;
+}
+.ss-title .pencil {
+  width: 60%;
+  height: 12px;
+  margin-top: 6px;
+}
+.ss-meta {
+  width: 60%;
+  height: 28px;
+}
+.ss-price {
+  font-size: clamp(2.4rem, 1.8rem + 2vw, 3.6rem);
+  line-height: 1;
+}
+.ss-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 1.5rem;
+}
+.ss-actions > span,
+.ss-cart {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 64px;
+}
+.ss-box {
+  position: absolute;
+  inset: 0;
+}
+.ss-cart {
+  align-content: start;
+  justify-items: start;
+  padding: 24px;
+  font-size: 1.5rem;
+  min-height: 150px;
+}
+.ss-plate {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  font-size: 1.7rem;
+}
+.ss-plate .ss-x {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+}
+.ss-plate span {
+  position: relative;
+  padding: 4px 12px;
+  background: var(--paper);
+}
+
+/*
+ * The inking. Where the browser has scroll timelines, the panel starts as a
+ * page of pencil notes on paper and becomes the store while it scrolls into
+ * view, part by part in reading order. Scrolling back undoes it. No script.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .store-panel {
+      view-timeline: --store block;
+      animation: panel-ink linear both;
+      animation-timeline: --store;
+      animation-range: cover 4% cover 22%;
+    }
+    .ip-sk {
+      display: block;
+      animation: sk-out linear both;
+      animation-timeline: --store;
+      animation-range: cover calc(8% + var(--r) * 3.2%) cover calc(20% + var(--r) * 3.2%);
+    }
+    .ip-pr {
+      animation: pr-in linear both;
+      animation-timeline: --store;
+      animation-range: cover calc(18% + var(--r) * 3.2%) cover calc(30% + var(--r) * 3.2%);
+    }
+  }
+}
+@keyframes panel-ink {
+  from {
+    background-color: var(--paper);
+  }
+  to {
+    background-color: var(--ink);
+  }
+}
+@keyframes sk-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+@keyframes pr-in {
+  from {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Real screenshots ---------- */
+
+.shots {
+  display: grid;
+  grid-template-columns: 5fr 5fr 1.44fr;
+  gap: 40px 16px;
+  align-items: end;
+  margin-top: clamp(96px, 10vw, 168px);
+}
+.shots-head {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 24px 64px;
+  align-items: start;
+}
+.shots-title {
+  margin: 0;
+  font-size: var(--step-lead);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.shots-copy {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+}
+.shots-head p {
+  margin: 0;
+  max-width: 58ch;
+}
+.shots-live {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+.shot {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.shot img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-ui);
+  background: var(--paper);
+}
+.shot figcaption {
+  font-size: var(--step-small);
+  color: var(--graphite-soft);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .js .shots[data-enter] > .shot[data-part] img {
+    clip-path: inset(0 0 100% 0 round var(--radius-ui));
+    transition: clip-path 1100ms var(--ease-in-out);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+  .js .shots[data-enter].is-in > .shot[data-part] img {
+    clip-path: inset(0 0 0 0 round var(--radius-ui));
+  }
+}
+
+/* ---------- Phone ---------- */
+
+@media (max-width: 900px) {
+  .store-panel {
+    grid-template-columns: 1fr;
+    margin-inline: 8px;
+  }
+  .ip-plate {
+    order: -1;
+    padding: 20px 20px 0;
+  }
+  .store-col {
+    padding: 24px 20px 28px;
+    gap: 22px;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .actions {
+    grid-template-columns: 1fr;
+  }
+  .act-add,
+  .stepper {
+    min-height: 58px;
+  }
+  .cart {
+    padding: 16px;
+  }
+  .cart-line-in {
+    grid-template-columns: 40px minmax(0, 1fr) auto 36px;
+    grid-template-areas:
+      "thumb name name remove"
+      "thumb step sum remove";
+    gap: 6px 10px;
+  }
+  .cart-thumb {
+    grid-area: thumb;
+    width: 40px;
+    height: 40px;
+  }
+  .cart-name {
+    grid-area: name;
+  }
+  .cart-line-in .stepper {
+    grid-area: step;
+    justify-self: start;
+  }
+  .cart-sum {
+    grid-area: sum;
+  }
+  .cart-remove {
+    grid-area: remove;
+  }
+  .shots {
+    grid-template-columns: 3.46fr 1fr;
+    gap: 28px 10px;
+  }
+  .shots-head {
+    grid-template-columns: 1fr;
+  }
+  .shot--home {
+    grid-column: 1 / -1;
+  }
+}

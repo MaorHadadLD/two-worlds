@@ -1,26 +1,421 @@
 @import "tailwindcss";
 
+/*
+ * Two worlds, one system.
+ * Sketch world: paper, graphite, pencil blue, a sticky-note yellow, handwriting.
+ * Product world: ink, chalk, one live colour that marks everything that works.
+ * The live colour never appears in the sketch world: it is what a pencil line becomes.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --desk: #d8d5cd;
+  --paper: #eceae4;
+  --paper-2: #e2dfd7;
+  --graphite: #1e1f23;
+  --graphite-soft: #4f5158;
+  --pencil: #275ba6;
+  --pencil-light: #8fb2df;
+  --note: #eadb78;
+  --note-2: #f0e5a1;
+
+  --ink: #111215;
+  --surface: #1a1c20;
+  --surface-2: #24272c;
+  --surface-3: #2e3238;
+  --chalk: #f1f0ea;
+  --chalk-soft: #a6a9b0;
+  --live: #c9f03e;
+  --live-press: #b6dc2c;
+  --alert: #ff8a5c;
+
+  --font-text: var(--font-plex), "Arial Hebrew", system-ui, sans-serif;
+  --font-sketch: var(--font-hand), "Comic Sans MS", cursive;
+
+  /* Five type steps. */
+  --step-small: 0.875rem;
+  --step-body: clamp(1.0625rem, 1rem + 0.22vw, 1.1875rem);
+  --step-lead: clamp(1.25rem, 1.08rem + 0.6vw, 1.625rem);
+  --step-head: clamp(2.125rem, 1.4rem + 2.9vw, 4rem);
+  --step-display: clamp(2.5rem, 1.5rem + 4.2vw, 5.25rem);
+
+  /* One radius for surfaces, pill for anything pressable. */
+  --radius: 20px;
+  --radius-ui: 12px;
+  --gutter: clamp(16px, 2.2vw, 32px);
+
+  /* Motion: one vocabulary for the whole page. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  /* A light spring (bounce ≈ 0.15) for things that land after travelling. */
+  --ease-land: linear(0, 0.1 4%, 0.41 12%, 0.81 23%, 0.99 31%, 1.06 38%, 1.07 44%, 1.04 54%, 1.01 66%, 1 100%);
+  --d-press: 140ms;
+  --d-ui: 220ms;
+  --d-move: 480ms;
+  --d-scene: 760ms;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-text);
+  --font-hand: var(--font-sketch);
+  --color-desk: var(--desk);
+  --color-paper: var(--paper);
+  --color-graphite: var(--graphite);
+  --color-pencil: var(--pencil);
+  --color-ink: var(--ink);
+  --color-chalk: var(--chalk);
+  --color-live: var(--live);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--desk);
+  color: var(--graphite);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 72px;
+  scrollbar-color: var(--graphite-soft) var(--desk);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--step-body);
+  line-height: 1.55;
+  background: var(--desk);
+  color: var(--graphite);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  font-feature-settings: "kern";
+}
+
+::selection {
+  background: var(--live);
+  color: var(--ink);
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+/* Focus: a ring that reads on paper and on ink. */
+:focus-visible {
+  outline: 2px solid var(--pencil);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.on-ink :focus-visible,
+.on-ink:focus-visible {
+  outline-color: var(--live);
+}
+
+.hand {
+  font-family: var(--font-sketch);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: fixed;
+  inset-inline-start: 12px;
+  top: 12px;
+  z-index: 60;
+  padding: 10px 18px;
+  background: var(--ink);
+  color: var(--chalk);
+  border-radius: 999px;
+  transform: translateY(-160%);
+  transition: transform var(--d-ui) var(--ease-out);
+}
+.skip:focus {
+  transform: none;
+}
+
+/* ---------- Shared pieces ---------- */
+
+.wrap {
+  width: 100%;
+  padding-inline: var(--gutter);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  min-height: 48px;
+  padding: 0 1.35em;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform var(--d-press) var(--ease-out),
+    background-color var(--d-ui) ease,
+    color var(--d-ui) ease;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn--ink {
+  background: var(--graphite);
+  color: var(--paper);
+}
+.btn--live {
+  background: var(--live);
+  color: var(--ink);
+}
+.btn--ghost-ink {
+  background: var(--surface-2);
+  color: var(--chalk);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--ink:hover {
+    background: #34363c;
+  }
+  .btn--live:hover {
+    background: var(--live-press);
+  }
+  .btn--ghost-ink:hover {
+    background: var(--surface-3);
+  }
+}
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.arrow-ico {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+}
+
+/* ---------- Section rhythm ---------- */
+
+.chapter {
+  position: relative;
+  padding-block: clamp(96px, 12vw, 200px);
+}
+
+.chapter-head {
+  display: grid;
+  gap: 20px;
+  max-width: 34rem;
+}
+
+.chapter-title {
+  margin: 0;
+  font-size: var(--step-head);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.chapter-lead {
+  margin: 0;
+  font-size: var(--step-body);
+  max-width: 40ch;
+  text-wrap: pretty;
+}
+
+/* ---------- Bar ---------- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 64px;
+  padding-inline: 20px;
+}
+.bar-mark {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
+}
+.bar-name {
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+}
+.bar-role {
+  font-size: var(--step-small);
+  color: var(--graphite-soft);
+}
+.bar-nav {
+  display: flex;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+.bar-nav a {
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background-color var(--d-ui) ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bar-nav a:hover {
+    background: var(--paper);
+  }
+}
+.bar-cta {
+  min-height: 42px;
+  font-size: 0.95rem;
+}
+@media (max-width: 760px) {
+  .bar {
+    padding-inline: 18px;
+    gap: 12px;
+  }
+  .bar-nav {
+    display: none;
+  }
+  .bar-cta {
+    margin-inline-start: auto;
+    padding: 0 1.05em;
+  }
+  .bar-role {
+    display: none;
+  }
+}
+
+/* ---------- Footer: the name returns at full width ---------- */
+
+.foot {
+  margin: 0 12px 12px;
+  padding: clamp(28px, 3vw, 44px) clamp(20px, 3vw, 44px) 28px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--chalk);
+  overflow: clip;
+}
+.foot-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+}
+.foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+}
+.foot-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .foot-links a:hover {
+    text-decoration: underline;
+  }
+}
+.foot-stack {
+  margin: 10px 0 0;
+  color: var(--chalk-soft);
+  font-size: var(--step-small);
+}
+.foot-name {
+  margin: clamp(72px, 10vw, 160px) 0 clamp(20px, 2vw, 32px);
+  font-size: clamp(4.5rem, 19vw, 20rem);
+  font-weight: 600;
+  line-height: 0.82;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+.foot-name-paper {
+  font-family: var(--font-sketch);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--pencil-light);
+}
+.foot-credits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 10px 48px;
+  font-size: var(--step-small);
+  color: var(--chalk-soft);
+}
+.foot-credits p {
+  margin: 0;
+  max-width: 72ch;
+}
+@media (max-width: 760px) {
+  .foot {
+    margin: 0 8px 8px;
+  }
+  .foot-name {
+    font-size: 24vw;
+  }
+}
+
+/* Paths drawn in with pathLength dashes must scale with their box, or Chrome ignores pathLength. */
+.side-ring path,
+.slip-ring path,
+.tally path {
+  vector-effect: none;
+}
+
+/* Rings drawn around text overhang it; preflight's svg max-width would pin them to the text. */
+.side-ring,
+.slip-ring {
+  max-width: none;
 }

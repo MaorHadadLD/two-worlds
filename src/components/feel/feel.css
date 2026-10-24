@@ -1,0 +1,408 @@
+/* ================= Chapter: from screen to experience ================= */
+
+.feel {
+  --k: 1;
+  padding-bottom: clamp(72px, 8vw, 128px);
+  background: var(--field-blue);
+  color: var(--chalk);
+}
+:root {
+  --field-blue: #1f4e93;
+}
+.feel .chapter-lead {
+  color: var(--chalk);
+}
+
+.feel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 56px clamp(40px, 7vw, 128px);
+  align-items: start;
+}
+.feel-copy {
+  display: grid;
+  gap: 22px;
+}
+
+/* ---------- The device ---------- */
+
+.device {
+  margin-top: 18px;
+  display: grid;
+  gap: 18px;
+  padding: clamp(22px, 2.6vw, 34px);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--chalk);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+.device-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.device-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+.device-sub {
+  font-size: var(--step-small);
+  color: var(--chalk-soft);
+}
+
+.deploy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 64px;
+  border-radius: 999px;
+  background: var(--live);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 1.125rem;
+  transition:
+    transform calc(140ms * var(--k)) var(--ease-out),
+    background-color calc(220ms * var(--k)) ease;
+}
+.deploy > * {
+  grid-area: 1 / 1;
+}
+.deploy[data-pressed]:not([data-phase="loading"]) {
+  transform: scale(0.97);
+}
+.deploy[aria-busy="true"] {
+  cursor: progress;
+}
+.deploy-label {
+  transition:
+    opacity calc(200ms * var(--k)) ease,
+    filter calc(220ms * var(--k)) ease,
+    transform calc(220ms * var(--k)) var(--ease-out);
+}
+.deploy[data-phase="loading"] .deploy-label {
+  opacity: 0;
+  filter: blur(4px);
+  transform: scale(0.94);
+}
+.deploy-spin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2.5px solid rgb(17 18 21 / 0.22);
+  border-top-color: var(--ink);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity calc(200ms * var(--k)) ease,
+    transform calc(240ms * var(--k)) var(--ease-out);
+}
+.deploy[data-phase="loading"] .deploy-spin {
+  opacity: 1;
+  transform: scale(1);
+  animation: spin calc(700ms * var(--k)) linear infinite;
+}
+@keyframes spin {
+  to {
+    rotate: 1turn;
+  }
+}
+.deploy-check {
+  justify-self: start;
+  margin-inline-start: 24px;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+.deploy-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.deploy[data-phase="success"] .deploy-check {
+  opacity: 1;
+}
+.deploy[data-phase="success"] .deploy-check path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset calc(400ms * var(--k)) var(--ease-out);
+}
+.deploy[data-phase="error"] {
+  background: var(--alert);
+}
+.deploy:focus-visible {
+  outline: 3px solid var(--live);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .device[data-skin="product"] .deploy[data-phase="idle"]:hover {
+    background: var(--live-press);
+  }
+}
+
+.device-msg {
+  margin: 0;
+  min-height: 3em;
+  font-size: 0.95rem;
+  color: var(--chalk-soft);
+}
+.device-msg:not(:empty) {
+  color: var(--chalk);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .device-msg:not(:empty) {
+    animation: msg-in calc(320ms * var(--k)) var(--ease-out);
+  }
+}
+@keyframes msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.device-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+.skin {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.skin button {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  color: var(--chalk-soft);
+  transition:
+    background-color var(--d-ui) ease,
+    color var(--d-ui) ease;
+}
+.skin button[aria-pressed="true"] {
+  background: var(--chalk);
+  color: var(--ink);
+}
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--live);
+  cursor: pointer;
+}
+
+/* The same device, as it was drawn: no feedback, no states, a box and a word. */
+.device[data-skin="sketch"] {
+  background: var(--paper);
+  color: var(--pencil);
+}
+.device[data-skin="sketch"] .device-title,
+.device[data-skin="sketch"] .device-sub {
+  font-family: var(--font-sketch);
+  font-size: 1.4rem;
+  color: var(--pencil);
+}
+.device[data-skin="sketch"] .deploy {
+  background: transparent;
+  color: var(--pencil);
+  font-family: var(--font-sketch);
+  font-weight: 400;
+  font-size: 1.6rem;
+  border-radius: 6px;
+  outline: 2px solid var(--pencil);
+  outline-offset: -2px;
+  transition: none;
+}
+.device[data-skin="sketch"] .deploy:focus-visible {
+  outline: 3px solid var(--pencil);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.device[data-skin="sketch"] .device-msg {
+  color: var(--graphite-soft);
+}
+.device[data-skin="sketch"] .skin {
+  background: var(--paper-2);
+}
+.device[data-skin="sketch"] .skin button {
+  color: var(--graphite);
+}
+.device[data-skin="sketch"] .skin button[aria-pressed="true"] {
+  background: var(--graphite);
+  color: var(--paper);
+}
+.device[data-skin="sketch"] .check {
+  color: var(--graphite);
+}
+.device[data-skin="sketch"] .check input {
+  accent-color: var(--pencil);
+}
+
+/* ---------- The slip ---------- */
+
+.slip-wrap {
+  display: grid;
+  justify-items: center;
+}
+.slip {
+  --tooth: 12px;
+  position: relative;
+  width: min(100%, 520px);
+  padding: 36px 36px calc(40px + var(--tooth));
+  background: var(--paper);
+  color: var(--graphite);
+  clip-path: polygon(
+    0 0, 100% 0, 100% calc(100% - var(--tooth)),
+    96.25% 100%, 92.5% calc(100% - var(--tooth)), 88.75% 100%, 85% calc(100% - var(--tooth)),
+    81.25% 100%, 77.5% calc(100% - var(--tooth)), 73.75% 100%, 70% calc(100% - var(--tooth)),
+    66.25% 100%, 62.5% calc(100% - var(--tooth)), 58.75% 100%, 55% calc(100% - var(--tooth)),
+    51.25% 100%, 47.5% calc(100% - var(--tooth)), 43.75% 100%, 40% calc(100% - var(--tooth)),
+    36.25% 100%, 32.5% calc(100% - var(--tooth)), 28.75% 100%, 25% calc(100% - var(--tooth)),
+    21.25% 100%, 17.5% calc(100% - var(--tooth)), 13.75% 100%, 10% calc(100% - var(--tooth)),
+    6.25% 100%, 2.5% calc(100% - var(--tooth)), 0 calc(100% - var(--tooth) * 0.3)
+  );
+}
+.slip-title {
+  margin: 0 0 8px;
+  font-size: var(--step-lead);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.slip-group h4 {
+  margin: 28px 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.slip-group ul {
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.slip-group li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 1rem;
+  transition: color 200ms ease;
+}
+.slip-text {
+  max-width: 26ch;
+}
+.leader {
+  position: relative;
+  flex: 1;
+  min-width: 24px;
+  height: 1em;
+  overflow: hidden;
+  color: var(--graphite-soft);
+  letter-spacing: 3px;
+}
+.leader::after {
+  /* Dots set as text, so the leader is type, not a rule. Absolute, so it never widens the row. */
+  content: "··································································";
+  position: absolute;
+  inset-inline-end: 0;
+  white-space: nowrap;
+}
+.slip-time {
+  position: relative;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.slip-time .slip-ring {
+  position: absolute;
+  inset: -9px -14px;
+  width: calc(100% + 28px);
+  height: calc(100% + 18px);
+  pointer-events: none;
+}
+.slip-ring path {
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 160ms ease;
+}
+.slip-group li[data-on] .slip-ring path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset calc(420ms * var(--k)) var(--ease-out);
+}
+.slip-group li[data-on] .slip-text {
+  font-weight: 500;
+}
+.slip-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  margin: 32px -36px 0;
+  padding: 0 36px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 500;
+}
+.slip-note {
+  position: absolute;
+  inset-inline-end: 28px;
+  bottom: 6px;
+  margin: 0;
+  color: var(--pencil);
+  font-size: 1.35rem;
+  opacity: 0;
+  transform: rotate(-3deg) translateY(6px);
+  transition:
+    opacity 240ms ease,
+    transform 320ms var(--ease-out);
+}
+.slip-note.is-on {
+  opacity: 1;
+  transform: rotate(-3deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deploy-label,
+  .deploy-spin {
+    transition-duration: 150ms;
+  }
+  .deploy[data-phase="loading"] .deploy-label {
+    filter: none;
+    transform: none;
+  }
+  .deploy[data-phase="loading"] .deploy-spin {
+    animation-duration: 1.6s;
+  }
+}
+
+@media (max-width: 900px) {
+  .feel-grid {
+    grid-template-columns: 1fr;
+  }
+  .slip {
+    padding-inline: 22px;
+  }
+  .slip-total {
+    margin-inline: -22px;
+    padding-inline: 22px;
+  }
+  .slip-note {
+    bottom: 2px;
+    font-size: 1.15rem;
+  }
+}
