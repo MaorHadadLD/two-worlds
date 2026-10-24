@@ -10,7 +10,7 @@ web
 People and businesses with an idea or an existing product who are looking for a developer to build a website, an online store, an app or a business system. They arrive on a phone or a laptop, usually from a link.
 
 ## Product Purpose
-"שני עולמות" (Two Worlds) is an interactive portfolio experience for Maor Hadad (מאור חדד), software developer. The same idea exists in two states: a sketch (thought, raw material, potential) and a designed digital product that works. The visitor controls the passage between them and feels the idea come alive. Success: the visitor remembers the passage from idea to product, understands that Maor builds websites, apps and systems, and wants to try one more interaction, then starts a conversation.
+"שני עולמות" (Two Worlds) is an interactive portfolio experience for Maor Hadad (מאור חדאד), software developer. The same idea exists in two states: a sketch (thought, raw material, potential) and a designed digital product that works. The visitor controls the passage between them and feels the idea come alive. Success: the visitor remembers the passage from idea to product, understands that Maor builds websites, apps and systems, and wants to try one more interaction, then starts a conversation.
 
 ## Positioning
 A developer who carries an idea all the way to a product people use, with care for the details of interaction.
@@ -24,7 +24,7 @@ Full Hebrew, RTL. Touch and mouse equally. Must respect prefers-reduced-motion.
 - No send service is configured: the closing form copies a summary to the clipboard and says so. No fake send confirmation.
 
 ## Brand Commitments
-- Name: מאור חדד / Maor Hadad. Role: מפתח תוכנה.
+- Name: מאור חדאד / Maor Hadad. Role: מפתח תוכנה.
 - Technologies: React, Next.js, TypeScript, React Native, Flutter, Node.js.
 - GitHub: https://github.com/MaorHadadLD. Removed from the page at the owner's request (2026-10-24); do not link it.
 - Email: maorhadad94@gmail.com, the contact channel on the page (given by the owner, 2026-10-24).

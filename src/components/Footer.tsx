@@ -17,11 +17,11 @@ export default function Footer() {
           מפתח תוכנה. <bdi dir="ltr">React · Next.js · TypeScript · React Native · Flutter · Node.js</bdi>
         </p>
       </div>
-      <p className="foot-name" aria-label="מאור חדד">
+      <p className="foot-name" aria-label="מאור חדאד">
         <span className="foot-name-paper" aria-hidden="true">
           מאור
         </span>{" "}
-        <span aria-hidden="true">חדד</span>
+        <span aria-hidden="true">חדאד</span>
       </p>
       <div className="foot-credits">
         <p>

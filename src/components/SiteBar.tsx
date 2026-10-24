@@ -1,8 +1,8 @@
 export default function SiteBar() {
   return (
     <header className="bar">
-      <a className="bar-mark" href="#top" aria-label="מאור חדד, מפתח תוכנה. לראש הדף">
-        <span className="bar-name">מאור חדד</span>
+      <a className="bar-mark" href="#top" aria-label="מאור חדאד, מפתח תוכנה. לראש הדף">
+        <span className="bar-name">מאור חדאד</span>
         <span className="bar-role">מפתח תוכנה</span>
       </a>
       <nav className="bar-nav" aria-label="פרקים">
